@@ -88,10 +88,39 @@ describe('Verify Likes property sets to "0" when not POSTed', () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    
+
     const blogsAtEnd = await listHelper.blogsInDb()
     expect(blogsAtEnd[listHelper.blogs.length].likes).toBe(0)
   })
+  
+})
+
+// Exercise 4.12
+describe('New POSTs without title/url are rejected', () => {
+
+  test('blog without title', async () => {
+  const newBlog = {
+    author: "A. N. Author",
+    url: "http://testingBackend.com",
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+  })
+
+  test('blog without author', async () => {
+    const newBlog = {
+      title: "Blog without author",
+      url: "http://testingBackend.com",
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+    })
   
 })
 
