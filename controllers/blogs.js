@@ -22,9 +22,9 @@ blogsRouter.get('/:id', (request, response, next) => {
 blogsRouter.post('/', (request, response, next) => {
   const body = request.body
 
-  if (body.title === undefined || body.author === undefined) {
+  if (body.title === undefined || body.url === undefined) {
     response.status(400).end()
-  }
+  } else {
 
   const blog = new Blog( {
     title: body.title,
@@ -39,6 +39,7 @@ blogsRouter.post('/', (request, response, next) => {
       response.json(savedBlog)
     })
     .catch(error => next(error))
+  }
 })
 
 // blogsRouter.delete('/:id', (request, response, next) => {

@@ -110,10 +110,10 @@ describe('New POSTs without title/url are rejected', () => {
     .expect(400)
   })
 
-  test('blog without author', async () => {
+  test('blog without url', async () => {
     const newBlog = {
-      title: "Blog without author",
-      url: "http://testingBackend.com",
+      title: "A blog without URL",
+      author: "A. N. Author",
     }
   
     await api
