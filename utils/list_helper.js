@@ -49,6 +49,19 @@ const blogs = [
   }   
 ]
 
+const noBlogs = []
+
+const oneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  }
+]
+
 const totalLikes = blogs => {
   return blogs.reduce((acc, cur) => {
     return acc + cur.likes
@@ -66,10 +79,7 @@ const favoriteBlog = blogs => {
 }
 
 const mostBlogs = blogs => {
-  let arr = []
-  const values = Object.values(blogs)
-  values.forEach(element => arr.push(element.author))
-  const sortedList = arr.sort()
+  const sortedList = blogs.map((blog) => blog.author)
   let maxFreq = 1
   let mostFreq = 0
   let item
@@ -94,7 +104,8 @@ const mostBlogs = blogs => {
 module.exports = {
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  blogs,
+  noBlogs,
+  oneBlog
 }
-
-console.log(mostBlogs(blogs))
