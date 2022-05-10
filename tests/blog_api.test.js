@@ -18,15 +18,23 @@ beforeEach(async () => {
 
 /* Exercise 4.8 
 Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs url. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
+Once the test is finished, refactor the route handler to use the async/await syntax instead of promises.
 */
+describe('Number of blogs | Content Type', () => {
 
-test('all blogs are returned (6) an in the correct (JSON) format', async () => {
-  const response = await api .get('/api/blogs')
-  expect(response.body).toHaveLength(listHelper.blogs.length)
-  expect(response.type).toBe('application/json')
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  }, 100000)
+
+  test('all blogs are returned (6)', async () => {
+    const response = await api .get('/api/blogs')
+    expect(response.body).toHaveLength(listHelper.blogs.length)
+  })
+
 })
-
-
 
 describe('total likes', () => {
 
