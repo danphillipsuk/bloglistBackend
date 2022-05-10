@@ -75,6 +75,26 @@ describe('Verify HTTP POST creates new blog post', () => {
   
 })
 
+// Exercise 4.11
+describe('Verify Likes property sets to "0" when not POSTed', () => {
+
+  test('Add a blog without Likes property', async () => {
+  const newBlog = {
+    title: "No Likes Set",
+    author: "A. N. Author",
+    url: "http://testingBackend.com",
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    
+    const blogsAtEnd = await listHelper.blogsInDb()
+    expect(blogsAtEnd[listHelper.blogs.length].likes).toBe(0)
+  })
+  
+})
+
 describe('total likes', () => {
 
   test('when list has only one blog, equals the likes of that', () => {
