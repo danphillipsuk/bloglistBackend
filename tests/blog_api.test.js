@@ -36,6 +36,45 @@ describe('Number of blogs | Content Type', () => {
 
 })
 
+// Exercise 4.9
+describe('Unique identifier is correct', () => {
+
+  test('Unique identifier (id) is defined', async () => {
+    const response = await api .get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+  })  
+
+}) 
+
+// Exercise 4.10
+describe('Verify HTTP POST creates new blog post', () => {
+
+  test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: "A blog Title to Check HTTP Post",
+    author: "A. N. Author",
+    url: "http://testingBackend.com",
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await listHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(listHelper.blogs.length + 1)
+    
+    const contents = blogsAtEnd.map(r => r.title)
+
+    expect(contents).toContain(
+      'A blog Title to Check HTTP Post'
+    )
+  })
+  
+})
+
 describe('total likes', () => {
 
   test('when list has only one blog, equals the likes of that', () => {
