@@ -163,6 +163,45 @@ describe('DELETE requests', () => {
 
 })
 
+// Exercise 4.14
+describe('PUT requests', () => {
+
+  test('Updating blog entry works', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    const blogEdits = {
+      title: "Edited Title",
+      author: "Edited Author",
+      url: "Edited URL"
+    }
+  
+    const resultBlog = await api
+      .put(`/api/blogs/${blogToView.id}`)
+      .send(blogEdits)
+    expect(resultBlog.body.title).toBe(blogEdits.title)
+    expect(resultBlog.body.author).toBe(blogEdits.author)
+    expect(resultBlog.body.url).toBe(blogEdits.url)
+  })
+
+  test('Updating likes increases by 1', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogLikes = blogsAtStart[0].likes
+    const newLikeNumber = blogLikes + 1
+
+    const likeIncrease = {
+      likes: newLikeNumber
+    }
+  
+    const resultBlog = await api
+      .put(`/api/blogs/${blogsAtStart[0].id}`)
+      .send(likeIncrease)
+    expect(resultBlog.body.likes).toBe(blogLikes + 1)
+  })
+
+
+
+})
 
 describe('total likes', () => {
 
@@ -184,7 +223,6 @@ describe('total likes', () => {
 
 })
 
-
 describe('Most Popular Blog', () => {
 
   const res = {
@@ -199,7 +237,6 @@ describe('Most Popular Blog', () => {
   })
 })
 
-
 describe('Who Has Authored The Most Blogs ', () => {
 
   const res = {
@@ -212,7 +249,6 @@ describe('Who Has Authored The Most Blogs ', () => {
     expect(result).toEqual(res)
   })
 })
-
 
 afterAll(() => {
   mongoose.connection.close()

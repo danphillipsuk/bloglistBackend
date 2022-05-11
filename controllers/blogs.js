@@ -37,22 +37,37 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndRemove(request.params.id) 
-  response.sendStatus(204).end
+  response.sendStatus(204).end()
 })
 
 // blogsRouter.put('/:id', (request, response, next) => {
 //   const body = request.body
 
-//   const note = {
-//     content: body.content,
-//     important: body.important,
+//   const blog = {
+//     title: body.title,
+//     author: body.author,
+//     url: body.url
 //   }
 
-//   Note.findByIdAndUpdate(request.params.id, note, { new: true })
-//   .then(updatedNote => {
-//     response.json(updatedNote)
+//   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+//   .then(updatedBlog => {
+//     response.json(updatedBlog)
 //   })
 //   .catch(error => next(error))
 // })
+
+blogsRouter.put('/:id', async (request, response) => {
+  const body = request.body
+
+  const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  }
+
+  const editedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  response.json(editedBlog)
+})
 
 module.exports = blogsRouter
