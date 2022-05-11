@@ -5,23 +5,15 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
-// const initialBlogs = listHelper.blogs
-
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await Blog.insertMany(listHelper.blogs)
+})
 
-  const blogObjects = listHelper.blogs
-    .map(blog => new Blog(blog))
-  const promiseArray = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArray)
-},100000)
 
-/* Exercise 4.8 
-Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs url. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
-Once the test is finished, refactor the route handler to use the async/await syntax instead of promises.
-*/
-describe('Number of blogs | Content Type', () => {
+describe('GET requests', () => {
 
+  //Exercise 4.8 
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -34,21 +26,36 @@ describe('Number of blogs | Content Type', () => {
     expect(response.body).toHaveLength(listHelper.blogs.length)
   })
 
-})
+  test('GET succeeds with a valid id', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogToView = blogsAtStart[0]
 
-// Exercise 4.9
-describe('Unique identifier is correct', () => {
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
+      const processedBlogToView = JSON.parse(JSON.stringify(blogToView))
+
+      expect(resultBlog.body).toEqual(processedBlogToView)
+  })
+
+  test('GET fails with a non-valid id', async () => {
+    await api
+    .get('/api/blogs/nonvalidid')
+    .expect(400)
+  })
+
+  // Exercise 4.9
   test('Unique identifier (id) is defined', async () => {
     const response = await api .get('/api/blogs')
     expect(response.body[0].id).toBeDefined()
-  })  
+  }) 
 
 }) 
 
+describe('POST requests', () => {
 // Exercise 4.10
-describe('Verify HTTP POST creates new blog post', () => {
-
   test('a valid blog can be added', async () => {
   const newBlog = {
     title: "A blog Title to Check HTTP Post",
@@ -72,57 +79,90 @@ describe('Verify HTTP POST creates new blog post', () => {
       'A blog Title to Check HTTP Post'
     )
   })
-  
-})
 
-// Exercise 4.11
-describe('Verify Likes property sets to "0" when not POSTed', () => {
-
+  // Exercise 4.11
   test('Add a blog without Likes property', async () => {
-  const newBlog = {
-    title: "No Likes Set",
-    author: "A. N. Author",
-    url: "http://testingBackend.com",
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-
-    const blogsAtEnd = await listHelper.blogsInDb()
-    expect(blogsAtEnd[listHelper.blogs.length].likes).toBe(0)
-  })
-  
-})
-
-// Exercise 4.12
-describe('New POSTs without title/url are rejected', () => {
-
-  test('blog without title', async () => {
-  const newBlog = {
-    author: "A. N. Author",
-    url: "http://testingBackend.com",
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-  })
-
-  test('blog without url', async () => {
     const newBlog = {
-      title: "A blog without URL",
+      title: "No Likes Set",
       author: "A. N. Author",
+      url: "http://testingBackend.com",
     }
   
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
-    })
   
+      const blogsAtEnd = await listHelper.blogsInDb()
+      expect(blogsAtEnd[listHelper.blogs.length].likes).toBe(0)
+  })
+
+  // Exercise 4.12
+  test('POST blog without title rejected', async () => {
+    const newBlog = {
+      author: "A. N. Author",
+      url: "http://testingBackend.com",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)  
+      .expect(400)
+  })
+  
+  test('POST blog without url rejected', async () => {
+    const newBlog = {
+      title: "A blog without URL",
+      author: "A. N. Author",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
 })
+
+// Exercise 4.13
+describe('DELETE requests', () => {
+
+  test('Does DELETE return correct response code (204)', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+  })
+
+  test('Does database contain one less record after HTTP DELETE request', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+
+    const blogsAtEnd = await listHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(
+      listHelper.blogs.length - 1
+    )
+  })
+
+  test('Does database remove the correct record after HTTP DELETE request', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+
+    const blogsAtEnd = await listHelper.blogsInDb()
+    const title = blogsAtEnd.map(r => r.title)
+
+    expect(title).not.toContain(blogToDelete.title)
+  })
+
+})
+
 
 describe('total likes', () => {
 
@@ -143,6 +183,7 @@ describe('total likes', () => {
   })
 
 })
+
 
 describe('Most Popular Blog', () => {
 
