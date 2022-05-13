@@ -203,7 +203,7 @@ describe('PUT requests', () => {
 
 })
 
-describe('total likes', () => {
+describe('Total Likes', () => {
 
   test('when list has only one blog, equals the likes of that', () => {
     const result = listHelper.totalLikes(listHelper.oneBlog)
