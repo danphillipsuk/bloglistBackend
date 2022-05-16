@@ -1,4 +1,5 @@
 const blogsRouter = require('express').Router()
+require('express-async-errors')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
@@ -50,8 +51,18 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id) 
-  response.sendStatus(204).end()
+
+  const blog = await Blog.findById(request.params.id)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (decodedToken.id === blog.user.toString()) {
+    await Blog.findByIdAndRemove(request.params.id) 
+    response.sendStatus(204).end()
+  } else {
+    response.status(401).send({
+      error: 'invalid signature'
+    }).end()
+  }
 })
 
 blogsRouter.put('/:id', async (request, response) => {

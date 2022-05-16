@@ -1,0 +1,17 @@
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRwQGRwLm9yZyIsImlkIjoiNjI4MjFjMjBlMjcxNWQ0NWFiM2NmMDFhIiwiaWF0IjoxNjUyNjk3MzI4fQ.TtKraUl7EW32N3TQg5NJ4MWN83qGBFKTQNW-rSMC_fM
+
+{
+  "title": "Blog to be deleted with valid token",
+  "author": "Dan Phillips",
+  "url": "xxx",
+  "userId": "62820a7a1fff89ef1c426d0d"
+}
+
+###
+
+###
+DELETE http://localhost:3003/api/blogs/62825193f9453edbd46a5c78
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRwQGRwLm9yZyIsImlkIjoiNjI4MjFjMjBlMjcxNWQ0NWFiM2NmMDFhIiwiaWF0IjoxNjUyNjk3MzI4fQ.TtKraUl7EW32N3TQg5NJ4MWN83qGBFKTQN-rSMC_fM
