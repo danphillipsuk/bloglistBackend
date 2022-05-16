@@ -27,3 +27,30 @@ Content-Type: application/json
   "username": "dp@dp.org",
   "password": "somepassword"
 }
+
+###
+// Send new blog entry with valid token
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRwQGRwLm9yZyIsImlkIjoiNjI4MjFjMjBlMjcxNWQ0NWFiM2NmMDFhIiwiaWF0IjoxNjUyNjk3MzI4fQ.TtKraUl7EW32N3TQg5NJ4MWN83qGBFKTQNW-rSMC_fM
+
+{
+  "title": "Token authentication",
+  "author": "Dan Phillips",
+  "url": "https://fullstackopen.com/en/",
+  "userId": "62820a7a1fff89ef1c426d0d"
+}
+
+###
+
+// Send new blog post with invalid token
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SMC_fM
+
+{
+  "title": "Token authentication",
+  "author": "Dan Phillips",
+  "url": "https://fullstackopen.com/en/",
+  "userId": "62820a7a1fff89ef1c426d0d"
+}
