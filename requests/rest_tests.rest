@@ -9,9 +9,10 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Full Stack Open",
-  "author": "University of Helsinki",
-  "url": "https://fullstackopen.com/en/"
+  "title": "Test addition",
+  "author": "Dan Phillips",
+  "url": "https://fullstackopen.com/en/",
+  "userId": "62820a7a1fff89ef1c426d0d"
 }
 
 ###

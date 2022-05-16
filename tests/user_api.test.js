@@ -7,14 +7,10 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const Blog = require('../models/blog')
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(listHelper.blogs)
-})
-
 describe('When there is initially one user in db', () => {
 
   test('creation succeeds with a fresh username', async () => {
+
     await User.deleteMany({})
     await User.insertMany(listHelper.newUser)
     const usersAtStart = await listHelper.usersInDb()
