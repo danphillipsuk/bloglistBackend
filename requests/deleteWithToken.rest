@@ -21,16 +21,16 @@ Content-Type: application/json
 
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVwQGVwLm9yZyIsImlkIjoiNjI4M2JiMTE2Y2VkYWYzMWM4MjViYjUxIiwiaWF0IjoxNjUyODU1NDkxfQ.W4qJlVgcbXH0N7Io17ck9K2fVg1hgf2tXnvsfIWf_iA
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVwQGVwLm9yZyIsImlkIjoiNjI4NGI4NTZmMDYwZDA0NzA0M2Y5MDYyIiwiaWF0IjoxNjUyODY1MTEzfQ._NfCH268PZSt_RCzmZZslUMUq0g5Ee6z2rjg6yyRTeo
 
 {
   "title": "Amber's a liar",
   "author": "Emma",
   "url": "xxx",
-  "userId": "6283bb116cedaf31c825bb51"
+  "userId": "6284b856f060d047043f9062"
 }
 
 ###
 
-DELETE http://localhost:3003/api/blogs/62849e407e682fdadf8c24f5
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVwQGVwLm9yZyIsImlkIjoiNjI4M2JiMTE2Y2VkYWYzMWM4MjViYjUxIiwiaWF0IjoxNjUyODU1NDkxfQ.W4qJlVgcbXH0N7Io17ck9K2fVg1hgf2tXnvsfIWf_iA
+DELETE http://localhost:3003/api/blogs/6284b881f060d047043f9067
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVwQGVwLm9yZyIsImlkIjoiNjI4NGI4NTZmMDYwZDA0NzA0M2Y5MDYyIiwiaWF0IjoxNjUyODY1MTEzfQ._NfCH268PZSt_RCzmZZslUMUq0g5Ee6z2rjg6yyRTeo

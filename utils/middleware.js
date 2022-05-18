@@ -41,7 +41,7 @@ const tokenExtractor = (request, response, next) => {
     request['token'] = authorization.substring(7)
   } 
   else {
-    return response.status(400).json({
+    return response.status(401).json({
       error: 'no token present'
     })
   }

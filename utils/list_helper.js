@@ -120,6 +120,7 @@ const newUser = {
   password: 'salainen',
 }
 
+
 module.exports = {
   totalLikes,
   favoriteBlog,

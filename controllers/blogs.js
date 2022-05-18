@@ -56,7 +56,7 @@ blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
-    response.json(savedBlog)
+    response.json(savedBlog).end()
   }
 })
 

@@ -4,11 +4,13 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const { application } = require('express')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(listHelper.blogs)
-})
+},10000)
 
 
 describe('GET requests', () => {
@@ -56,41 +58,61 @@ describe('GET requests', () => {
 
 describe('POST requests', () => {
 // Exercise 4.10
-  test('a valid blog can be added', async () => {
-  const newBlog = {
-    title: "A blog Title to Check HTTP Post",
-    author: "A. N. Author",
-    url: "http://testingBackend.com",
-    likes: 0
-  }
+  test('A blog can be added by a registered user', async () => {
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    await User.deleteMany({})
 
-    const blogsAtEnd = await listHelper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(listHelper.blogs.length + 1)
-    
-    const contents = blogsAtEnd.map(r => r.title)
+    const newBlog = {
+      title: "A blog Title to Check HTTP Post",
+      author: "Amber Lies",
+      url: "http://testingBackend.com",
+      likes: 0
+    }
 
-    expect(contents).toContain(
-      'A blog Title to Check HTTP Post'
-    )
+    const newUser = listHelper.newUser 
+
+    await api.post('/api/users').send(newUser)
+    const token = await api.post('/api/login').send(newUser)
+  
+    const blogsBeforePost = await api.get('/api/blogs')//.set({ 'Authorization': 'bearer ' + token.body.token })
+
+    await api
+      .post('/api/blogs')
+      .set({ 'Authorization': 'bearer ' + token.body.token })
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterPost = await api.get('/api/blogs')//.set({ 'Authorization': 'bearer ' + token.body.token })
+    const titles = blogsAfterPost.body.map(r => r.title)
+
+    expect(blogsAfterPost.body).toHaveLength(blogsBeforePost.body.length + 1)
+    expect(titles).toContain('A blog Title to Check HTTP Post')
+
   })
 
   // Exercise 4.11
   test('Add a blog without Likes property', async () => {
+
+    await User.deleteMany({})
+
     const newBlog = {
       title: "No Likes Set",
       author: "A. N. Author",
       url: "http://testingBackend.com",
     }
-  
+
+    const newUser = listHelper.newUser 
+
+    await api.post('/api/users').send(newUser)
+    const token = await api.post('/api/login').send(newUser)
+    
     await api
-      .post('/api/blogs')
-      .send(newBlog)
+    .post('/api/blogs')
+    .set({ 'Authorization': 'bearer ' + token.body.token })
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
   
       const blogsAtEnd = await listHelper.blogsInDb()
       expect(blogsAtEnd[listHelper.blogs.length].likes).toBe(0)
@@ -121,12 +143,37 @@ describe('POST requests', () => {
       .expect(400)
   })
 
+  test('A blog CANNOT be added by a non-registered user', async () => {
+
+    await User.deleteMany({})
+
+    const newBlog = {
+      title: "A blog Title to Check HTTP Post",
+      author: "Amber Lies",
+      url: "http://testingBackend.com",
+      likes: 0
+    }
+  
+    const blogsBeforePost = await api.get('/api/blogs')//.set({ 'Authorization': 'bearer ' + token.body.token })
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    const blogsAfterPost = await api.get('/api/blogs')//.set({ 'Authorization': 'bearer ' + token.body.token })
+
+    expect(blogsAfterPost.body).toHaveLength(blogsBeforePost.body.length)
+
+  })
+
 })
 
 // Exercise 4.13
 describe('DELETE requests', () => {
 
   test('Does DELETE return correct response code (204)', async () => {
+    
     const blogsAtStart = await listHelper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
